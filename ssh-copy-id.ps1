@@ -8,18 +8,18 @@
  .SYNTAX
     Invoke directly from the powershell command line
  .EXAMPLES
-    .\Scriptname -i idtest.pub user@example.com password
-    .\Scriptname -i idtest.pub user@example.com password -Debug
-    .\ScriptName user@example.com password
+    .\ssh-copy-id.ps1 user@example.com password
+    .\ssh-copy-id.ps1 -i idtest.pub user@example.com password
+    .\ssh-copy-id.ps1 -i idtest.pub -P 1234 user@example.com password
 .NOTES
-    AUTHOR: VijayS
-    DATE:   2014-01-23
+    AUTHOR: VijayS / daniol
+    DATE: 2023-02-12
     COMMENT: 
     DEPENDENCIES: 
         plink.exe
         type
  .HELPURL
-    http://stackoverflow.com
+    https://github.com/daniol/ssh-copy-id
  .SEEALSO
  .REFERENCE
     http://www.christowles.com/2011/06/how-to-ssh-from-powershell-using.html
@@ -36,15 +36,19 @@ Param(
     [ValidateScript({Test-Path $_})]
     [Alias("i")]
     [String]$identity="id_rsa.pub",
+	
+	[Parameter(Mandatory=$false)]
+    [Alias("P")]
+    [String]$param_port="22",
 
     [switch]$ConnectOnceToAcceptHostKey=$false
     )
 
 ####################################
 Function Get-SSHCommands {
- Param($Target,$Password, $CommandArray, $PlinkAndPath, $ConnectOnceToAcceptHostKey = $true)
+ Param($Target,$Password, $CommandArray, $PlinkAndPath, $Port, $ConnectOnceToAcceptHostKey = $true)
  
- $plinkoptions = "`-ssh $Target"
+ $plinkoptions = "`-ssh $Target -P $Port"
  if ($Password) { $plinkoptions += " `-pw $Password " }
  
  #Build ssh Commands
@@ -101,6 +105,7 @@ Try {
      -Password $Password `
      -PlinkAndPath $PlinkAndPath `
      -CommandArray $Commands `
+	 -Port $param_port `
      -ConnectOnceToAcceptHostKey $ConnectOnceToAcceptHostKey
 
      # pipe the public key to the plink session to get it appended in the right place
