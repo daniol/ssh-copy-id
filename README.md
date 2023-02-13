@@ -1,33 +1,18 @@
-ssh-copy-id
-=======
+# Powershell ssh-copy-id
+Powershell script duplicating ssh-copy-id behaviour in Windows.
 
-Various scripts duplicating ssh-copy-id behavior in windows. All scripts depend on **plink.exe** which you can download from [here](http://the.earth.li/~sgtatham/putty/latest/x86/plink.exe)
+## Dependencies
+It depends on **[plink.exe](http://the.earth.li/~sgtatham/putty/latest/x86/plink.exe)**. Download and place it on the same folder as the script.
 
-Attempted methods so far:
+## Usage:
+ - Default (public key file named `id_rsa.pub`): `.\ssh-copy-id.ps1 user@example.com password`
+ - Specify public key file: `.\ssh-copy-id.ps1 -i idtest.pub user@example.com password`
+ - Port other than 22: `.\ssh-copy-id.ps1 -P 1234 user@example.com password`
 
-- DOS(.cmd) - Success
- - `usage: .\Scriptname test@example.com password [identity file] `
-- VBS (.vbs) - Success
- - `usage: .\Scriptname /i:idtest.pub user@example.com /p:password `
-- Powershell(.ps1) - Success
- - `usage: .\Scriptname -i idtest.pub user@example.com password` 
-- mremoteNG (ext app) - Success
- - Select Host, right click, external tools, select Scriptname 
-- WinSCP script (.bat) - Success
- - `# "WinSCP.com"  /script=".\Scriptname" /parameter "user[:password]@example.com" "id_rsa.pub" [/log=".\copyssh.log]"` 
+## Desired Features
+Pull requests are welcome for the following functionalities:
+1. Default mode: prompt for key, host/port and password
+2. Check .authorized_keys to see if the key already exists
 
-Still to try:
-
-- Batch processing using one of the scripts above. (preferrably powershell). Load hosts.txt & keys.txt and loop over them.
-- GUI application (.net? ahk?)
-- Check Keys mode. If input is substring of keys file. 
-
-
----
-Desired Features:
-
-1. ability to enter mulltiple connection strings and passwords
-1.   ability to specify multiple public keys
-1.   checking feature: which shows which servers you have access to with your currently selected private key? or public key? (if public key then need to provide password for remote sites again, or use another known private key?). Remember this? maintain a state? and can periodically refresh?
-1. have a default mode: prompt for key, remotestring and password
-1. check .authorized_keys to see if the key already exists?
+## Credits
+Original work from [VijayS1](https://github.com/VijayS1/Scripts/tree/master/ssh-copy-id).
